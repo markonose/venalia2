@@ -23,6 +23,16 @@ namespace WebApi.Apis
             _mapper = mapper;
         }
 
+        [Authorize(Roles = "Administrator")]
+        [HttpPatch("{id:guid}/approve")]
+        public ActionResult Approve([FromRoute] ApproveInstallationRequest request)
+        {
+            _installationService.Approve(request);
+
+            return Ok();
+        }
+
+        [Authorize(Roles = "Administrator")]
         [HttpPatch("{id:guid}/assign/{installerId}")]
         public ActionResult Assign([FromRoute] AssignInstallationRequest request)
         {
@@ -31,6 +41,7 @@ namespace WebApi.Apis
             return Ok();
         }
 
+        [Authorize(Roles = "Administrator,Business")]
         [HttpPatch("{id:guid}/cancel")]
         public ActionResult Cancel([FromRoute] CancelInstallationRequest request)
         {
@@ -39,6 +50,7 @@ namespace WebApi.Apis
             return Ok();
         }
 
+        [Authorize(Roles = "Installer")]
         [HttpPatch("{id:guid}/complete")]
         public ActionResult Complete([FromRoute] CompleteInstallationRequest request)
         {
@@ -47,6 +59,7 @@ namespace WebApi.Apis
             return Ok();
         }
 
+        [Authorize(Roles = "Administrator,Business")]
         [HttpPost]
         public CreateInstallationResponse Create([FromBody] CreateInstallationRequest request)
         {
@@ -59,6 +72,7 @@ namespace WebApi.Apis
             };
         }
 
+        [Authorize(Roles = "Administrator")]
         [HttpDelete("{id:guid}")]
         public ActionResult Delete([FromRoute] DeleteInstallationRequest request)
         {
@@ -90,6 +104,7 @@ namespace WebApi.Apis
             };
         }
 
+        [Authorize(Roles = "Installer")]
         [HttpPatch("{id:guid}/start")]
         public ActionResult Start([FromRoute] StartInstallationRequest request)
         {
@@ -98,6 +113,7 @@ namespace WebApi.Apis
             return Ok();
         }
 
+        [Authorize(Roles = "Administrator")]
         [HttpPatch("{id:guid}/unassign")]
         public ActionResult Unassign([FromRoute] UnassignInstallationRequest request)
         {
@@ -106,6 +122,7 @@ namespace WebApi.Apis
             return Ok();
         }
 
+        [Authorize(Roles = "Administrator")]
         [HttpPatch("{id:guid}/undelete")]
         public ActionResult Undelete([FromRoute] UndeleteInstallationRequest request)
         {

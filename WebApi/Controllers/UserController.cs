@@ -144,9 +144,9 @@ namespace WebApi.Apis
         }
 
         [HttpPut("{id:guid}")]
-        public UpdateUserResponse Update(Guid id, [FromBody] UpdateUserRequest request)
+        public async Task<UpdateUserResponse> Update(Guid id, [FromBody] UpdateUserRequest request)
         {
-            var user = _userService.Update(id, request);
+            var user = await _userService.Update(id, request);
 
             return new UpdateUserResponse()
             {

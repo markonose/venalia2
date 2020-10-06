@@ -139,6 +139,7 @@ namespace WebApi.Services
             return user;
         }
 
+        [Authorize(Roles = "Administrator")]
         public (List<ListUsersResponseData> users, Pagination pagination) List(ListUsersRequest request)
         {
             List<ListUsersResponseData> users;
@@ -216,8 +217,6 @@ namespace WebApi.Services
                 connection.Open();
 
                 using var transaction = connection.BeginTransaction();
-
-                // Dapper
                 string sql =
                     @"INSERT INTO [dbo].[Users]
                     (
@@ -270,27 +269,7 @@ namespace WebApi.Services
 
                 transaction.Execute(sql, new
                 {
-                    user.Id,
-                    user.Email,
-                    user.PasswordHash,
-                    user.Type,
-                    user.FirstName,
-                    user.LastName,
-                    user.BusinessName,
-                    user.Address,
-                    user.PostCode,
-                    user.City,
-                    user.Region,
-                    user.IsTaxablePerson,
-                    user.VATNumber,
-                    user.IBAN,
-                    user.Status,
-                    user.IsConfirmed,
-                    user.IsDeleted,
-                    user.Created,
-                    user.CreatedBy,
-                    user.Modified,
-                    user.ModifiedBy,
+                    user
                 });
 
                 _emailService.Send("test@eklip.si", "test@eklip.si", "Potrditev", user.Id.ToString());
@@ -313,7 +292,7 @@ namespace WebApi.Services
             conn.Execute(sql, new { request.Id });
         }
 
-        public UpdateUserResponseData Update(Guid id, UpdateUserRequest request)
+        public async Task<UpdateUserResponseData> Update(Guid id, UpdateUserRequest request)
         {
             var user = _mapper.Map<User>(request);
             user.ApplyUpdatedFields(_httpContextAccessor.HttpContext);
@@ -368,6 +347,9 @@ namespace WebApi.Services
                 transaction.Commit();
             }
 
+            await Logout();
+            await AuthenticateAsync(user);
+
             return _mapper.Map<UpdateUserResponseData>(user);
         }
 
@@ -378,7 +360,7 @@ namespace WebApi.Services
             string sql =
                 @"UPDATE [dbo].[Users]
                       SET
-                        [PaymentTerm]  = @FirstName,
+                        [PaymentTerm]  = @PaymentTerm,
                         Modified = @Modified,
                         ModifiedBy = @ModifiedBy
                        WHERE Id = @Id
@@ -400,6 +382,8 @@ namespace WebApi.Services
                     new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                     new Claim(ClaimTypes.Email, user.Email),
                     new Claim(ClaimTypes.Role, user.Type.ToString()),
+                    new Claim("BusinessName", user.BusinessName),
+                    new Claim("Region", user.Status.ToString()),
                     new Claim("Status", user.Status.ToString()),
                 };
 

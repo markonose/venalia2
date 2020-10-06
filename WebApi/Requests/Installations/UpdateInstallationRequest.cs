@@ -17,14 +17,27 @@ namespace WebApi.Requests.Installations
         public string CustomerLastName { get; set; }
         public string CustomerEmail { get; set; }
         public string CustomerPhoneNumber { get; set; }
-        public string AcUnitBrand { get; set; }
-        public decimal AcUnitPower { get; set; }
-        public decimal? AcIndoorUnitHeight { get; set; }
-        public decimal? AcOutdoorUnitHeight { get; set; }
+        public InstallationDetails[] Installations { get; set; }
         public bool IsExpress { get; set; }
+        public DateTime Deadline { get; set; }
         public string Remark { get; set; }
-        public DateTime PreferedDate { get; set; }
-        public InstallationStatus Status { get; set; }
+
+        public class InstallationDetails
+        {
+            public string AcUnitBrand { get; set; }
+            public decimal AcUnitPower { get; set; }
+            public decimal? AcIndoorUnitHeight { get; set; }
+            public decimal? AcOutdoorUnitHeight { get; set; }
+        }
+
+        public class InstallationDetailsValidator : AbstractValidator<InstallationDetails>
+        {
+            public InstallationDetailsValidator()
+            {
+                RuleFor(x => x.AcUnitBrand).NotEmpty();
+                RuleFor(x => x.AcUnitPower).GreaterThan(0);
+            }
+        }
     }
 
     public class UpdateInstallationRequestValidator : AbstractValidator<UpdateInstallationRequest>
@@ -44,10 +57,6 @@ namespace WebApi.Requests.Installations
             RuleFor(x => x.CustomerLastName).NotEmpty();
             RuleFor(x => x.CustomerEmail).NotEmpty();
             RuleFor(x => x.CustomerPhoneNumber).NotEmpty();
-            RuleFor(x => x.AcUnitBrand).NotEmpty();
-            RuleFor(x => x.AcUnitPower).GreaterThan(0);
-            ////RuleFor(x => x.AcOutdoorUnitHeight).GreaterThan(4).When(x => x.AcOutdoorUnitHeight.HasValue);
-            RuleFor(x => x.PreferedDate).GreaterThanOrEqualTo(DateTime.Now.AddDays(7));
         }
     }
 }

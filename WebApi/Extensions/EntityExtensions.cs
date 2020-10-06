@@ -19,5 +19,12 @@ namespace WebApi.Extensions
             entity.Modified = DateTime.Now;
             entity.ModifiedBy = context.User.GetId();
         }
+
+        public static void RemoveAdministrationData(this IEntity entity)
+        {
+            entity.CreatedBy = Guid.Empty;
+            entity.Modified = DateTime.MinValue;
+            entity.ModifiedBy = Guid.Empty;
+        }
     }
 }

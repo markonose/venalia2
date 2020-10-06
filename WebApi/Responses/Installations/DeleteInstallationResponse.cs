@@ -22,13 +22,19 @@ namespace WebApi.Responses.Installation
 		public string CustomerLastName { get; set; }
 		public string CustomerEmail { get; set; }
 		public string CustomerPhoneNumber { get; set; }
-        public string AcUnitBrand { get; set; }
-        public decimal AcUnitPower { get; set; }
-		public decimal? AcIndoorUnitHeight { get; set; }
-		public decimal? AcOutdoorUnitHeight { get; set; }
+		InstallationDetails[] Installations { get; set; }
 		public bool IsExpress { get; set; }
 		public string Remark { get; set; }
-		public DateTime PreferedDate { get; set; }
+		public DateTime Deadline { get; set; }
+		public int Quantity { get; set; }
 		public InstallationStatus Status { get; set; }
+
+		public class InstallationDetails
+		{
+			public string AcUnitBrand { get; set; }
+			public decimal AcUnitPower { get; set; }
+			public decimal? AcIndoorUnitHeight { get; set; }
+			public decimal? AcOutdoorUnitHeight { get; set; }
+		}
 	}
 }

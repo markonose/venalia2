@@ -12,8 +12,6 @@ namespace WebApi.Configurators
         {
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-            services.AddScoped<BusinessService>();
-
             services.AddScoped<InstallationService>();
 
             services.AddScoped<IEmailService, EmailService>();

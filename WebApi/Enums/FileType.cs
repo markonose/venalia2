@@ -1,14 +1,12 @@
-﻿using System.Runtime.Serialization;
-
-namespace WebApi.Enums
+﻿namespace WebApi.Enums
 {
     public enum FileType
     {
-        FPlin,
-
-        Installation,
-        IndoorUnit,
-        OutdoorUnit,
-        V
+        FGas = 11,
+        License = 12, 
+        Installation = 21,
+        IndoorUnit = 31,
+        OutdoorUnit = 32,
+        Vaccuumer = 33
     }
 }
